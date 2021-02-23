@@ -1,0 +1,10 @@
+현재 30분 이상 넘어진 킥보드 목록입니다.
+
+{% for kickboard in kickboards %}
+[{{kickboard.region.fullName}}]
+킥보드 ID: {{kickboard.kickboard.kickboardCode}} ({{kickboard.status.power.scooter.battery}}%, {{kickboard.status.power.iot.battery}}%)
+업데이트: {{kickboard.status.createdAt}}
+현재 위치: {{kickboard.url}}
+
+{% endfor %}
+업데이트 일시: {{ current }}
