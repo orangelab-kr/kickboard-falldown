@@ -39,19 +39,19 @@ async function main() {
   const message = await liquid.renderFile('list.liquid', {
     current: moment().format('LLL'),
     kickboards: kickboards.sort(
-      (a: any, b: any) => a.region.code2 - b.region.code2
+      (a: any, b: any) => a.region.code1 - b.region.code1
     ),
   });
 
   const regions: { [key: string]: any[] } = {};
   kickboards.forEach((kickboard: any) => {
-    let { code2 } = kickboard.region;
-    if (!process.env[`${code2}_CHANNEL_ID`]) {
-      code2 = process.env.DEFAULT_REGION_ID;
+    let { code1 } = kickboard.region;
+    if (!process.env[`${code1}_CHANNEL_ID`]) {
+      code1 = process.env.DEFAULT_REGION_ID;
     }
 
-    if (!regions[code2]) regions[code2] = [];
-    regions[code2].push(kickboard);
+    if (!regions[code1]) regions[code1] = [];
+    regions[code1].push(kickboard);
   });
 
   const current = moment().format('LLL');
