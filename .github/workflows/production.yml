@@ -49,11 +49,9 @@ jobs:
           image: ${{ steps.build-image.outputs.image }}
 
       - name: Deploy to Amazon ECS
-        uses: airfordable/ecs-deploy-task-definition-to-scheduled-task@v2.0.0
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          cluster: production
-          rule-prefix: kickboard-falldown
 
       - name: Logout of Amazon ECR
         if: always()
