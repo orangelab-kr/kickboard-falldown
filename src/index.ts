@@ -12,18 +12,22 @@ async function main() {
   moment.locale('ko');
   logger.info('시스템이 활성화되었습니다.');
   const bot = new Telegraf(process.env.TELEGRAM_BOT!);
-  const sslCA = [readFileSync('rds-combined-ca-bundle.pem')];
   const liquid = new Liquid({ root: './templates' });
   mongoose.Promise = global.Promise;
   await bot.launch();
 
   logger.info('텔레그램 봇이 연결되었습니다.');
-  await mongoose.connect(process.env.MONGODB_URI!, {
+  const sslCA = [readFileSync('rds-combined-ca-bundle.pem')];
+  const MONGODB_URI =
+    process.env.MONGODB_URI || 'mongodb://localhost:27017/kickboard';
+  const hasSSL = MONGODB_URI.includes('ssl=true');
+  mongoose.Promise = global.Promise;
+  await mongoose.connect(MONGODB_URI, {
     useCreateIndex: true,
     useUnifiedTopology: true,
     useNewUrlParser: true,
-    sslValidate: false,
-    sslCA,
+    sslValidate: hasSSL ? false : undefined,
+    sslCA: hasSSL ? sslCA : undefined,
   });
 
   logger.info('데이터베이스와 연결되었습니다.');
