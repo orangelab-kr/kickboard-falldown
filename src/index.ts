@@ -40,14 +40,12 @@ async function main() {
     kickboards.push(result);
   }
 
-  const message = await liquid.renderFile('list.liquid', {
-    current: moment().format('LLL'),
-    kickboards: kickboards.sort(
-      (a: any, b: any) => a.region.code1 - b.region.code1
-    ),
+  const regions: { [key: string]: any[] } = {};
+  const defaultRegions = process.env.CHANNEL_REGIONS || '';
+  defaultRegions.split(',').forEach((region) => {
+    regions[region] = [];
   });
 
-  const regions: { [key: string]: any[] } = {};
   kickboards.forEach((kickboard: any) => {
     let { code1 } = kickboard.region;
     if (!process.env[`${code1}_CHANNEL_ID`]) {
@@ -66,7 +64,9 @@ async function main() {
       const messageId = process.env[`${key}_MESSAGE_ID`];
       const message = await liquid.renderFileSync('list.liquid', {
         current,
-        kickboards: value,
+        kickboards: value.sort(
+          (a: any, b: any) => a.region.code1 - b.region.code1
+        ),
       });
 
       logger.info(`[${key}] 메세지를 렌더링했습니다.`);
