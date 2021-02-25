@@ -42,9 +42,12 @@ async function main() {
 
   const regions: { [key: string]: any[] } = {};
   const defaultRegions = process.env.CHANNEL_REGIONS || '';
-  defaultRegions.split(',').forEach((region) => {
-    regions[region] = [];
-  });
+  defaultRegions
+    .split(',')
+    .filter((region) => region.length > 0)
+    .forEach((region) => {
+      regions[region] = [];
+    });
 
   kickboards.forEach((kickboard: any) => {
     let { code1 } = kickboard.region;
