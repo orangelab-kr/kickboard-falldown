@@ -17,17 +17,13 @@ async function main() {
   await bot.launch();
 
   logger.info('텔레그램 봇이 연결되었습니다.');
-  const sslCA = [readFileSync('rds-combined-ca-bundle.pem')];
-  const MONGODB_URI =
-    process.env.MONGODB_URI || 'mongodb://localhost:27017/kickboard';
-  const hasSSL = MONGODB_URI.includes('ssl=true');
+  const DATABASE_URL =
+    process.env.DATABASE_URL || 'mongodb://localhost:27017/kickboard';
   mongoose.Promise = global.Promise;
-  await mongoose.connect(MONGODB_URI, {
+  await mongoose.connect(DATABASE_URL, {
     useCreateIndex: true,
     useUnifiedTopology: true,
     useNewUrlParser: true,
-    sslValidate: hasSSL ? false : undefined,
-    sslCA: hasSSL ? sslCA : undefined,
   });
 
   logger.info('데이터베이스와 연결되었습니다.');
