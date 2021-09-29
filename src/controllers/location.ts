@@ -1,6 +1,6 @@
-import got from 'got/dist/source';
+import got from 'got';
 
-export default class Location {
+export class Location {
   public static async getLocationToRegion(status: any): Promise<any> {
     const region = await got({
       method: 'GET',

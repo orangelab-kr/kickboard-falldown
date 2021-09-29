@@ -1,13 +1,12 @@
+import { Document, Schema, model } from 'mongoose';
 import {
   PacketStatusNetwork,
   PacketStatusPower,
   PacketStatusTrip,
 } from 'kickboard-sdk';
-import { Moment } from 'moment';
-import { Document, model, Schema } from 'mongoose';
 
 export declare class PacketStatusGps {
-  timestamp: Moment;
+  timestamp: Date;
   latitude: number;
   longitude: number;
   satelliteUsedCount: number;
@@ -74,30 +73,29 @@ export const StatusPowerSchema = new Schema({
   speedLimit: { type: Number, required: false },
 });
 
-export const StatusSchema = new Schema(
-  {
-    kickboardId: { type: String, index: true, required: true },
-    timestamp: { type: String, required: false },
-    messageNumber: { type: Number, required: false },
-    gps: { type: StatusGpsSchema, required: false },
-    network: { type: StatusNetworkSchema, required: false },
-    trip: { type: StatusTripSchema, required: false },
-    power: { type: StatusPowerSchema, required: false },
-    isEnabled: { type: Boolean, required: false },
-    isLightsOn: { type: Boolean, required: false },
-    isBuzzerOn: { type: Boolean, required: false },
-    isControllerChecked: { type: Boolean, required: false },
-    isIotChecked: { type: Boolean, required: false },
-    isBatteryChecked: { type: Boolean, required: false },
-    isFallDown: { type: Boolean, required: false },
-    isEBSBrakeOn: { type: Boolean, required: false },
-    isKickstandOn: { type: Boolean, required: false },
-    isLineLocked: { type: Boolean, required: false },
-    isBatteryLocked: { type: Boolean, required: false },
-    reportReason: { type: [Number], required: false },
-    speed: { type: Number, required: false },
-  },
-  { timestamps: { createdAt: 'createdAt' } }
-);
+export const StatusSchema = new Schema({
+  kickboardId: { type: String, index: true, required: true },
+  timestamp: { type: String, required: false },
+  messageNumber: { type: Number, required: false },
+  gps: { type: StatusGpsSchema, required: false },
+  network: { type: StatusNetworkSchema, required: false },
+  trip: { type: StatusTripSchema, required: false },
+  power: { type: StatusPowerSchema, required: false },
+  isEnabled: { type: Boolean, required: false },
+  isLightsOn: { type: Boolean, required: false },
+  isBuzzerOn: { type: Boolean, required: false },
+  isControllerChecked: { type: Boolean, required: false },
+  isIotChecked: { type: Boolean, required: false },
+  isBatteryChecked: { type: Boolean, required: false },
+  isFallDown: { type: Boolean, required: false },
+  isEBSBrakeOn: { type: Boolean, required: false },
+  isKickstandOn: { type: Boolean, required: false },
+  isLineLocked: { type: Boolean, required: false },
+  isBatteryLocked: { type: Boolean, required: false },
+  reportReason: { type: [Number], required: false },
+  speed: { type: Number, required: false },
+  createdAt: { type: Date, required: true, default: Date.now },
+});
 
+StatusSchema.index({ createdAt: -1 });
 export const StatusModel = model<StatusDoc>('status', StatusSchema);

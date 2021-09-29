@@ -1,8 +1,7 @@
-import Location from './location';
-import { StatusModel } from '../models';
 import moment from 'moment';
+import { Location, StatusModel } from '..';
 
-export default class Kickboard {
+export class Kickboard {
   public static async getKickboardWithRegion(kickboard: any): Promise<any[]> {
     const { status } = kickboard;
     kickboard.status.createdAt = moment(status.createdAt).format('LLL');

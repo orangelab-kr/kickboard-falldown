@@ -1,14 +1,14 @@
-import Kickboard from './controllers/kickboard';
 import { Liquid } from 'liquidjs';
-import { Telegraf } from 'telegraf';
-import dotenv from 'dotenv';
-import logger from './tools/logger';
 import moment from 'moment';
 import mongoose from 'mongoose';
-import { readFileSync } from 'fs';
-if (process.env.NODE_ENV === 'dev') dotenv.config();
+import { Telegraf } from 'telegraf';
+import { Kickboard, logger } from '.';
 
-async function main() {
+export * from './controllers';
+export * from './models';
+export * from './tools';
+
+export async function main() {
   moment.locale('ko');
   logger.info('시스템이 활성화되었습니다.');
   const bot = new Telegraf(process.env.TELEGRAM_BOT!);
@@ -20,12 +20,7 @@ async function main() {
   const DATABASE_URL =
     process.env.DATABASE_URL || 'mongodb://localhost:27017/kickboard';
   mongoose.Promise = global.Promise;
-  await mongoose.connect(DATABASE_URL, {
-    useCreateIndex: true,
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
-  });
-
+  await mongoose.connect(DATABASE_URL);
   logger.info('데이터베이스와 연결되었습니다.');
   const res = await Kickboard.getFalldown();
   logger.info(`넘어진 킥보드를 ${res.length}개를 발견하였습니다.`);
@@ -78,7 +73,7 @@ async function main() {
       );
 
       logger.info(`[${key}] 메세지를 전송했습니다.`);
-    } catch (err) {
+    } catch (err: any) {
       if (
         err.message ===
         '400: Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message'
