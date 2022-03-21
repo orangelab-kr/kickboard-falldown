@@ -24,7 +24,6 @@ export async function main() {
   logger.info('데이터베이스와 연결되었습니다.');
   const res = await Kickboard.getFalldown();
   logger.info(`넘어진 킥보드를 ${res.length}개를 발견하였습니다.`);
-
   const kickboards: any = [];
   for (const kickboard of res) {
     const result = await Kickboard.getKickboardWithRegion(kickboard);
@@ -36,9 +35,7 @@ export async function main() {
   defaultRegions
     .split(',')
     .filter((region) => region.length > 0)
-    .forEach((region) => {
-      regions[region] = [];
-    });
+    .forEach((region) => (regions[region] = []));
 
   kickboards.forEach((kickboard: any) => {
     let { code1 } = kickboard.region;
@@ -54,8 +51,8 @@ export async function main() {
   for (const key of Object.keys(regions)) {
     try {
       const value = regions[key];
-      const channelId = process.env[`${key}_CHANNEL_ID`];
-      const messageId = process.env[`${key}_MESSAGE_ID`];
+      const channelId = process.env[`REGION_${key}_CHANNEL_ID`];
+      const messageId = process.env[`REGION_${key}_MESSAGE_ID`];
       const message = await liquid.renderFileSync('list.liquid', {
         current,
         kickboards: value.sort(
