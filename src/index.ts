@@ -39,7 +39,7 @@ export async function main() {
 
   kickboards.forEach((kickboard: any) => {
     let { code1 } = kickboard.region;
-    if (!process.env[`${code1}_CHANNEL_ID`]) {
+    if (!process.env[`REGION_${code1}_CHANNEL_ID`]) {
       code1 = process.env.DEFAULT_REGION_ID;
     }
 
